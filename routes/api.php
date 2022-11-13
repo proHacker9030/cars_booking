@@ -23,7 +23,9 @@ Route::apiResources([
 ]);
 
 Route::prefix('book/cars')->group(function() {
+    // Book car by user
     Route::post('/', [CarBookController::class, 'book']);
+    // Delete booked car for user
     Route::delete('/', [CarBookController::class, 'deleteBook']);
 });
 
