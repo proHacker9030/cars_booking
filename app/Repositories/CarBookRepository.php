@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use App\Models\Car;
 use App\Models\CarBook;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class CarBookRepository extends BaseRepository
@@ -19,9 +21,17 @@ class CarBookRepository extends BaseRepository
         $model = self::getModelFqcn();
         /** @var CarBook $book */
         $book = $model::where(['user_id' => $userId, 'car_id' => $carId])->firstOrNew();
+
         if ($book->exists()) {
             abort(403, 'В один момент времени 1 пользователь может управлять только одним автомобилем.');
         }
+        if (!User::find($userId)) {
+            abort(404, 'Пользователь не найден.');
+        }
+        if (!Car::find($carId)) {
+            abort(404, 'Автомобиль не найден.');
+        }
+
         $book->user_id = $userId;
         $book->car_id = $carId;
         $book->save();

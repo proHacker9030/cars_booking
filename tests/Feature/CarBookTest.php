@@ -75,4 +75,12 @@ class CarBookTest extends TestCase
         $response = $this->getJson('/api/users/'.$user->id.'/car');
         $response->assertStatus(404);
     }
+
+    public function test_not_exist()
+    {
+        $input = ['car_id' => 123, 'user_id' => 456];
+
+        $response = $this->postJson('/api/book/cars', $input);
+        $response->assertStatus(404);
+    }
 }
