@@ -1,0 +1,401 @@
+openapi: 3.0.3
+info:
+  title: Swagger Car Booking - OpenAPI 3.0
+  description: >-
+    Даны два списка. Список автомобилей и список пользователей. C помощью
+    laravel сделать api для управления списком использования автомобилей
+    пользователями. В один момент времени 1 пользователь может управлять только
+    одним автомобилем. В один момент времени 1 автомобилем может управлять
+    только 1 пользователь. Код разместить на https://github.com/ Подготовить
+    документацию в https://editor.swagger.io/ Обязательно наличие тестов.
+  contact:
+    email: nail.95.kz@mail.ru
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+paths:
+  /api/users:
+    get:
+      summary: Get list of users
+      responses:
+        '200':
+          description: A list of pets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create new user
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/password'
+        - $ref: '#/components/parameters/email'
+      description: ''
+      responses:
+        '200':
+          description: Created user.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/User'
+  /api/users/{id}:
+    get:
+      summary: Get user by id
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: User object.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+    put:
+      summary: Update user by id
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/password'
+      responses:
+        '200':
+          description: User object.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete user by id
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: User object.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TrueAnswer'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+    
+  /api/users/{id}/car:
+    get:
+      summary: Get car by user id
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: Car object.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Car'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+    
+  /api/cars:
+    get:
+      summary: Get list of cars
+      responses:
+        '200':
+          description: A list of cars.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Car'
+    post:
+      summary: Create new car
+      parameters:
+        - $ref: '#/components/parameters/brand'
+        - $ref: '#/components/parameters/model'
+      description: ''
+      responses:
+        '200':
+          description: Created book.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/CarBook'
+  /api/cars/{id}:
+    get:
+      summary: Get car by id
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: Car object.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Car'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+    put:
+      summary: Update car by id
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/brand'
+        - $ref: '#/components/parameters/model'
+      responses:
+        '200':
+          description: Car object.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Car'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Delete car by id
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: Car object.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TrueAnswer'
+        '404':
+          description: Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+                
+                
+  /api/book/cars:
+    summary: Бронирование автомобилей
+    post:
+      summary: Book car by user
+      parameters:
+        - $ref: '#/components/parameters/car_id'
+        - $ref: '#/components/parameters/user_id'
+      description: ''
+      responses:
+        '200':
+          description: Created book.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/CarBook'
+        '403':
+          description: Forbidden. В один момент времени 1 пользователь может управлять только одним автомобилем.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+        '404':
+          description: Not found. Пользователь или автомобиль не найдены.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+                
+    delete:
+      summary: Delete book car by user
+      parameters:
+        - $ref: '#/components/parameters/car_id'
+        - $ref: '#/components/parameters/user_id'
+      description: ''
+      responses:
+        '200':
+          description: Deleted book.
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/TrueAnswer'
+        '404':
+          description: Not found. Ошибка удаления брони автомобиля. На пользователя не забронирован данный автомобиль.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/NotFound'
+    
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        update_at:
+          type: string
+          format: date-time
+    Car:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        brand:
+          type: string
+        model:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        update_at:
+          type: string
+          format: date-time
+    CarBook:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        user_id:
+          type: integer
+          format: int32
+        car_id:
+          type: integer
+          format: int32
+        created_at:
+          type: string
+          format: date-time
+        update_at:
+          type: string
+          format: date-time
+    TrueAnswer:
+      type: object
+      properties:
+        data:
+          type: boolean
+    GeneralError:
+      type: object
+      properties:
+        message:
+          type: string
+  parameters:
+    id:
+      name: id
+      in: path
+      description: Entity id
+      required: true
+      schema:
+        type: integer
+        format: int32
+    name:
+      name: name
+      in: query
+      description: User name
+      required: true
+      schema:
+        type: integer
+        format: int32
+    password:
+      name: password
+      in: query
+      description: User password
+      required: true
+      schema:
+        type: string
+    email:
+      name: email
+      in: query
+      description: User email
+      required: true
+      schema:
+        type: string
+    brand:
+      name: brand
+      in: query
+      description: Car brand
+      required: true
+      schema:
+        type: string
+    model:
+      name: model
+      in: query
+      description: Car model
+      required: true
+      schema:
+        type: string
+    car_id:
+      name: car_id
+      in: query
+      description: Entity id
+      required: true
+      schema:
+        type: integer
+        format: int32
+    user_id:
+      name: user_id
+      in: query
+      description: Entity id
+      required: true
+      schema:
+        type: integer
+        format: int32
+  responses:
+    NotFound:
+      description: Entity not found.
+    Forbidden:
+      description: Forbidden exception.
+    UnprocessableEntity:
+      description: >-
+        Неверные или невалидные входные данные, либо отсутсвие обязательных
+        полей. При ошибке валидации в ответе появляется массив errors.
+    InternalServerError:
+      description: >-
+        Внутрення ошибка сервера. В этом случае нужно связаться с разработчиком
+        для выяснения причины ошибки.
+    GeneralError:
+      description: General Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralError'
